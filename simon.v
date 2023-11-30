@@ -1,4 +1,5 @@
 `timescale 1ns / 1ps
+
 module simon (
     input wire clk,
     input wire rst,
@@ -6,6 +7,8 @@ module simon (
     input wire [3:0] btn,
     output reg [3:0] led,
     output wire sound
+//    output reg [15:0] score,
+//    output reg [6:0] seven_seg
 );
 
   localparam MAX_GAME_LEN = 32;
@@ -61,6 +64,14 @@ module simon (
       .sound(sound)
   );
 
+//reg [15:0] local_score;
+//reg [3:0] score_digits;
+
+//seven_segment_decoder seg_decoder (
+//      .in(score_digits),
+//      .seg(seven_seg)
+//  );
+  
   always @(posedge clk) begin
     if (rst) begin
       seq_length <= 0;
@@ -72,6 +83,7 @@ module simon (
       state <= StatePowerOn;
       seq[0] <= 0;
       led <= 4'b0000;
+//      score_digits <= 4'b0000; // Initialize score digits to zero
     end else begin
       tick_counter <= tick_counter + 1;
       next_random  <= next_random + 1;
@@ -84,7 +96,7 @@ module simon (
       case (state)
         StatePowerOn: begin
           led <= 4'b1111;
-          
+          led[millis_counter[9:8]] <= 1'b0;
           // Wait until the user presses some button - the delay will seed the random sequence
           if (btn != 0) begin
             state <= StateInit;
