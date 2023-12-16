@@ -6,9 +6,9 @@ module simon (
     input wire [15:0] ticks_per_milli,
     input wire [3:0] btn,
     output reg [3:0] led,
-    output wire sound
-//    output reg [15:0] score,
-//    output reg [6:0] seven_seg
+    output wire sound,
+    output reg [2:0] state,
+    output reg [9:0] scr = 0
 );
 
   localparam MAX_GAME_LEN = 32;
@@ -46,8 +46,7 @@ module simon (
   reg [4:0] seq_counter;
   reg [4:0] seq_length;
   reg [1:0] seq[MAX_GAME_LEN-1:0];
-  reg [2:0] state;
-
+  
   reg [15:0] tick_counter;
   reg [9:0] millis_counter;
   reg [2:0] tone_sequence_counter;
@@ -55,6 +54,8 @@ module simon (
 
   reg [1:0] next_random;
   reg [1:0] user_input;
+  
+  reg bool = 0;
 
   play play1 (
       .clk(clk),
@@ -64,14 +65,6 @@ module simon (
       .sound(sound)
   );
 
-//reg [15:0] local_score;
-//reg [3:0] score_digits;
-
-//seven_segment_decoder seg_decoder (
-//      .in(score_digits),
-//      .seg(seven_seg)
-//  );
-  
   always @(posedge clk) begin
     if (rst) begin
       seq_length <= 0;
@@ -82,8 +75,10 @@ module simon (
       next_random <= 0;
       state <= StatePowerOn;
       seq[0] <= 0;
+      scr <= 0;
+      bool = 0;
       led <= 4'b0000;
-//      score_digits <= 4'b0000; // Initialize score digits to zero
+      
     end else begin
       tick_counter <= tick_counter + 1;
       next_random  <= next_random + 1;
@@ -137,6 +132,7 @@ module simon (
           end
         end
         StateUserWait: begin
+        bool <= 0;
           led <= 0;
           millis_counter <= 0;
           if (btn != 0) begin
@@ -161,6 +157,8 @@ module simon (
                 millis_counter <= 0;
                 seq[seq_length] <= next_random;
                 seq_length <= seq_length + 1;
+//                local_score <= local_score + 1;  // Increment score
+//                score <= local_score;  // Update the output score
                 state <= StateNextLevel;
               end else begin
                 seq_counter <= seq_counter + 1;
@@ -173,6 +171,11 @@ module simon (
           end
         end
         StateNextLevel: begin
+          if (bool == 0) 
+          begin
+          scr <= scr + 1;
+          bool = 1;
+          end
           led <= 0;
           if (millis_counter == 150) begin
             if (tone_sequence_counter < 7) begin
@@ -213,6 +216,12 @@ module simon (
           end
         end
       endcase
+//      // Update the score digits for display
+//      if (score >= 1000) score_digits <= score[15:12];
+//      else if (score >= 100) score_digits <= score[11:8];
+//      else if (score >= 10) score_digits <= score[7:4];
+//      else score_digits <= score[3:0];
+//      //
     end
   end
 
