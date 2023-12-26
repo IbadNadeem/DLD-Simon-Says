@@ -16,7 +16,7 @@ To get started with the Simon Says Memory Game, follow these steps:
 
 1. **Clone the Repository:**
    ```bash
-   git clone https://github.com/IbadNadeem/Simon-Says
+   git clone https://github.com/IbadNadeem/Simon-Says.git
    cd Simon-Says
    ```
 
