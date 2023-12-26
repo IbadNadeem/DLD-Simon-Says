@@ -33,7 +33,7 @@ wire [3:0] one;
 wire [3:0] ten;
 wire [3:0] hun;
 wire [3:0] thou;
-   
+
 clock_divider(CLK, CLKD);
 
 simon simon1 (
@@ -52,6 +52,7 @@ v_counter v1(CLKD, v_trig, v_count); // v_counter called
 vga_sync vga1(h_count, v_count, h_sync, v_sync, video_on, x_loc, y_loc); // syncing for VGA output
 pixel_gen pix1(CLKD, x_loc, y_loc, LED0, LED1, LED2, LED3, ste, red, green, blue); // adding colors to pixel (x_loc, y_loc)
 digits dig(score,one,ten,hun,thou);
-seg7_control seg7(clk_d,rst,one,ten,hun,thou,seg,an);
+seg7_control seg7(CLKD,RST,one,ten,hun,thou,seg,an);
+//seg_display seg7(CLKD,one,ten,hun,thou,seg,an);
 
 endmodule

@@ -191,6 +191,7 @@ module simon (
           end
         end
         StateGameOver: begin
+          scr <= 0;
           led <= millis_counter[7] ? 4'b1111 : 4'b0000;
 
           if (tone_sequence_counter == 4) begin
@@ -216,12 +217,6 @@ module simon (
           end
         end
       endcase
-//      // Update the score digits for display
-//      if (score >= 1000) score_digits <= score[15:12];
-//      else if (score >= 100) score_digits <= score[11:8];
-//      else if (score >= 10) score_digits <= score[7:4];
-//      else score_digits <= score[3:0];
-//      //
     end
   end
 

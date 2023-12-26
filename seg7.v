@@ -9,8 +9,6 @@ output [3:0] thousand
     assign hundreds = (num%1000)/100;
     assign tens = ((num%1000)%100)/10;
     assign ones = (((num%1000)%100)%10);
-    
-    
 endmodule
 
 
